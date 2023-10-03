@@ -24,7 +24,7 @@ export class StoreController {
   findOne(@Param('id') id: string) {
     return this.storeService.findOne(id);
   }
-
+  
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
   update(@Param('id') id: string, @Body() updateStoreDto: UpdateStoreDto) {
