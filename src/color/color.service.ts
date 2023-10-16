@@ -12,69 +12,50 @@ export class ColorService {
     private readonly cloudinaryService: CloudinaryService
   ) { }
 
-  async create({ colorImages, ...color }: CreateColorDto) {
+  async create(color: CreateColorDto) {
+
     return await this.prismaService.color.create({
-      data: {
-        ...color,
-        colorImages: { create: colorImages }
-        // images: {
-        //   createMany: {
-        //     data: [...images.map((image: { url: string }) => image)],
-        //   },
-        // },
-        // sizes: {
-        //   connect: sizes.map((size: any) => ({
-        //     id: size.sizeId,
-        //   })),
-        // },
-      }
+      data: color
     });
   }
 
   async findAll({ storeId, limit, page }: GetParams) {
-    return await this.prismaService.color.findMany({
+
+    const totalColors = await this.prismaService.color.count();
+
+    const colors = await this.prismaService.color.findMany({
       where: {
         storeId: storeId,
       },
-      include: { colorImages: true},
+      include: { products: true },
       skip: (+page - 1) * +limit,
       take: +limit
     });
+
+    return {
+      data: colors,
+      total: totalColors
+    }
   }
 
   async findOne(id: string) {
     return await this.prismaService.color.findUnique({
       where: {
         id: id,
-      },
-      include: { colorImages: true}
-    });
-  }
-
-  async update(id: string, { colorImages, ...color }: UpdateColorDto) {
-    return await this.prismaService.color.update({
-      where: {
-        id: id,
-      },
-      data: {
-        ...color,
-        colorImages: { deleteMany: {}, create: colorImages }
       }
     });
   }
 
-  async remove(id: string) {
-
-    const color = await this.prismaService.color.findUnique({
+  async update(id: string, color: UpdateColorDto) {
+    return await this.prismaService.color.update({
       where: {
         id: id,
       },
-      include: { colorImages: true },
+      data: color
     });
+  }
 
-    const colorImages = color.colorImages.map((image) => image.publicId);
-
-    this.cloudinaryService.deleteImages(colorImages);
+  async remove(id: string) {
 
     await this.prismaService.color.delete({
       where: {

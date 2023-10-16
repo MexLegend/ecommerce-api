@@ -3,6 +3,7 @@ import { BillboardService } from './billboard.service';
 import { CreateBillboardDto } from './dto/create-billboard.dto';
 import { UpdateBillboardDto } from './dto/update-billboard.dto';
 import { GetParams } from 'src/types/getParams';
+import { UpdateBillboardImageDto } from './dto/update-billboard-image.dto';
 
 @Controller('billboard')
 export class BillboardController {
@@ -30,6 +31,12 @@ export class BillboardController {
   @HttpCode(HttpStatus.OK)
   update(@Param('id') id: string, @Body() updateBillboardDto: UpdateBillboardDto) {
     return this.billboardService.update(id, updateBillboardDto);
+  }
+
+  @Patch(':id/image')
+  @HttpCode(HttpStatus.OK)
+  updateImage(@Param('id') id: string, @Body() updateBillboardDto: UpdateBillboardImageDto) {
+    return this.billboardService.updateImage(id, updateBillboardDto);
   }
 
   @Delete(':id')

@@ -10,4 +10,6 @@ export class CreateProductDto {
     sizeIds: string[];
     stock: number;
     storeId: string;
+    isArchived: boolean;
+    isFeatured: boolean;
 }

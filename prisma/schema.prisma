@@ -178,7 +178,6 @@ model Color {
   storeId     String    @db.ObjectId
   updatedAt   DateTime  @updatedAt
   color       String
-  colorImages Image[]
 
   @@index([storeId])
 }
@@ -186,17 +185,15 @@ model Color {
 model Image {
   createdAt   DateTime   @default(now())
   id          String     @id @default(auto()) @map("_id") @db.ObjectId
-  product     Product?    @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId   String?     @db.ObjectId
-  user        User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String?     @unique @db.ObjectId
+  product     Product?   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId   String?    @db.ObjectId
+  user        User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String?    @unique @db.ObjectId
   updatedAt   DateTime   @updatedAt
   publicId    String
   url         String
-  color       Color?     @relation(fields: [colorId], references: [id], onDelete: Cascade)
-  colorId     String?    @db.ObjectId
   billboard   Billboard? @relation(fields: [billboardId], references: [id], onDelete: Cascade)
-  billboardId String     @unique @db.ObjectId
+  billboardId String?     @unique @db.ObjectId
 
   @@index([productId])
 }

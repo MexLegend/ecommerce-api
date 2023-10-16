@@ -17,13 +17,22 @@ export class SizeService {
   }
 
   async findAll({ storeId, limit, page }: GetParams) {
-    return await this.prismaService.size.findMany({
+
+    const totalSizes = await this.prismaService.size.count();
+
+    const sizes = await this.prismaService.size.findMany({
       where: {
         storeId: storeId,
       },
+      include: { products: true },
       skip: (+page - 1) * +limit,
       take: +limit
     });
+
+    return {
+      data: sizes,
+      total: totalSizes
+    }
   }
 
   async findOne(id: string) {

@@ -16,11 +16,19 @@ export class StoreService {
   }
 
   async findAll(userId: string) {
-    return await this.prismaService.store.findMany({
+
+    const totalStores = await this.prismaService.store.count();
+
+    const stores = await this.prismaService.store.findMany({
       where: {
         userId: userId
       }
     });
+
+    return {
+      data: stores,
+      total: totalStores
+    }
   }
 
   async findOne(id: string) {

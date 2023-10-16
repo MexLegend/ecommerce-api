@@ -13,17 +13,24 @@ export class ProductService {
     private readonly cloudinaryService: CloudinaryService,
   ) { }
 
-  async create({ images, ...product }: CreateProductDto) {
+  async create({ images, price, stock, isArchived, isFeatured, ...product }: CreateProductDto) {
     return await this.prismaService.product.create({
       data: {
         ...product,
+        price: Number(price),
+        stock: Number(stock),
+        isArchived: Boolean(isArchived),
+        isFeatured: Boolean(isFeatured),
         images: { create: images }
       }
     });
   }
 
   async findAll({ storeId, limit, page }: GetParams) {
-    return await this.prismaService.product.findMany({
+
+    const totalProducts = await this.prismaService.product.count();
+
+    const products = await this.prismaService.product.findMany({
       where: {
         storeId: storeId,
       },
@@ -31,6 +38,11 @@ export class ProductService {
       skip: (+page - 1) * +limit,
       take: +limit
     });
+
+    return {
+      data: products,
+      total: totalProducts
+    }
   }
 
   async findOne(id: string) {
@@ -42,13 +54,17 @@ export class ProductService {
     });
   }
 
-  async update(id: string, { images, ...product }: UpdateProductDto) {
+  async update(id: string, { images, price, stock, isArchived, isFeatured, ...product }: UpdateProductDto) {
     return await this.prismaService.product.update({
       where: {
         id: id,
       },
       data: {
         ...product,
+        price: Number(price),
+        stock: Number(stock),
+        isArchived: Boolean(isArchived),
+        isFeatured: Boolean(isFeatured),
         images: { deleteMany: {}, create: images }
       }
     });

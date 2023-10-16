@@ -4,6 +4,7 @@ import { UpdateBillboardDto } from './dto/update-billboard.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { GetParams } from 'src/types/getParams';
+import { UpdateBillboardImageDto } from './dto/update-billboard-image.dto';
 
 @Injectable()
 export class BillboardService {
@@ -22,7 +23,10 @@ export class BillboardService {
   }
 
   async findAll({ storeId, limit, page }: GetParams) {
-    return await this.prismaService.billboard.findMany({
+
+    const totalBillbaords = await this.prismaService.billboard.count();
+
+    const billboards = await this.prismaService.billboard.findMany({
       where: {
         storeId: storeId,
       },
@@ -30,6 +34,11 @@ export class BillboardService {
       skip: (+page - 1) * +limit,
       take: +limit
     });
+
+    return {
+      data: billboards,
+      total: totalBillbaords
+    }
   }
 
   async findOne(id: string) {
@@ -48,6 +57,20 @@ export class BillboardService {
       },
       data: {
         ...billboard,
+        image: { update: image }
+      }
+    });
+  }
+
+  async updateImage(id: string, { image, oldPublicId }: UpdateBillboardImageDto) {
+
+    this.cloudinaryService.deleteImages([oldPublicId]);
+
+    return await this.prismaService.billboard.update({
+      where: {
+        id: id,
+      },
+      data: {
         image: { update: image }
       }
     });

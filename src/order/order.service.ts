@@ -18,13 +18,21 @@ export class OrderService {
   }
 
   async findAll({ storeId, limit, page }: GetParams) {
-    return await this.prismaService.order.findMany({
+
+    const totalOrders = await this.prismaService.order.count();
+
+    const orders = await this.prismaService.order.findMany({
       where: {
         storeId: storeId,
       },
       skip: (+page - 1) * +limit,
       take: +limit
     });
+
+    return {
+      data: orders,
+      total: totalOrders
+    }
   }
 
   async findOne(id: string) {
