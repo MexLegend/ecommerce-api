@@ -28,7 +28,11 @@ export class ProductService {
 
   async findAll({ storeId, limit, page }: GetParams) {
 
-    const totalProducts = await this.prismaService.product.count();
+    const totalProducts = await this.prismaService.product.count({
+      where: {
+        storeId: storeId,
+      },
+    });
 
     const products = await this.prismaService.product.findMany({
       where: {
@@ -51,6 +55,27 @@ export class ProductService {
         id: id,
       },
       include: { images: true, category: true, colors: true, sizes: true },
+    });
+  }
+
+  async findInStock({ storeId }: GetParams) {
+    return await this.prismaService.product.count({
+      where: {
+        storeId: storeId,
+        stock: { gt: 0 }
+      }
+    });
+  }
+
+  async findBestSelling({ limit, page }: GetParams) {
+
+    return await this.prismaService.product.findMany({
+      where: {
+        isFeatured: true
+      },
+      include: { images: true, category: true, colors: true, sizes: true },
+      skip: (+page - 1) * +limit,
+      take: +limit
     });
   }
 

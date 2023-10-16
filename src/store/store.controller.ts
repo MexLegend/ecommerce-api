@@ -5,7 +5,7 @@ import { UpdateStoreDto } from './dto/update-store.dto';
 
 @Controller('store')
 export class StoreController {
-  constructor(private readonly storeService: StoreService) {}
+  constructor(private readonly storeService: StoreService) { }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -24,7 +24,13 @@ export class StoreController {
   findOne(@Param('id') id: string) {
     return this.storeService.findOne(id);
   }
-  
+
+  @Get('slug/:slug')
+  @HttpCode(HttpStatus.OK)
+  findBySlug(@Param('slug') slug: string) {
+    return this.storeService.findBySlug(slug);
+  }
+
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
   update(@Param('id') id: string, @Body() updateStoreDto: UpdateStoreDto) {

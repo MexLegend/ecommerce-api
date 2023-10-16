@@ -61,6 +61,7 @@ model Store {
   colors     Color[]
   createdAt  DateTime    @default(now())
   id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  slug       String      @unique
   name       String
   orders     Order[]
   products   Product[]
@@ -193,7 +194,7 @@ model Image {
   publicId    String
   url         String
   billboard   Billboard? @relation(fields: [billboardId], references: [id], onDelete: Cascade)
-  billboardId String?     @unique @db.ObjectId
+  billboardId String?    @unique @db.ObjectId
 
   @@index([productId])
 }

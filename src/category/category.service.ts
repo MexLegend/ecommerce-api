@@ -18,7 +18,11 @@ export class CategoryService {
 
   async findAll({ storeId, limit, page }: GetParams) {
 
-    const totalCategories = await this.prismaService.category.count();
+    const totalCategories = await this.prismaService.category.count({
+      where: {
+        storeId: storeId,
+      },
+    });
 
     const categories = await this.prismaService.category.findMany({
       where: {

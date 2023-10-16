@@ -24,7 +24,11 @@ export class BillboardService {
 
   async findAll({ storeId, limit, page }: GetParams) {
 
-    const totalBillbaords = await this.prismaService.billboard.count();
+    const totalBillbaords = await this.prismaService.billboard.count({
+      where: {
+        storeId: storeId,
+      },
+    });
 
     const billboards = await this.prismaService.billboard.findMany({
       where: {

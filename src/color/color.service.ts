@@ -21,7 +21,11 @@ export class ColorService {
 
   async findAll({ storeId, limit, page }: GetParams) {
 
-    const totalColors = await this.prismaService.color.count();
+    const totalColors = await this.prismaService.color.count({
+      where: {
+        storeId: storeId,
+      },
+    });
 
     const colors = await this.prismaService.color.findMany({
       where: {

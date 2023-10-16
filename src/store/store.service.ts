@@ -17,7 +17,13 @@ export class StoreService {
 
   async findAll(userId: string) {
 
-    const totalStores = await this.prismaService.store.count();
+    const totalStores = await this.prismaService.store.count(
+      {
+        where: {
+          userId: userId
+        }
+      }
+    );
 
     const stores = await this.prismaService.store.findMany({
       where: {
@@ -36,6 +42,15 @@ export class StoreService {
       where: {
         id: id,
       }
+    });
+  }
+
+  async findBySlug(slug: string) {
+    return await this.prismaService.store.findUnique({
+      where: {
+        slug: slug,
+      },
+      include: { billboards: true, categories: true }
     });
   }
 

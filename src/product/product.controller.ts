@@ -26,6 +26,18 @@ export class ProductController {
     return this.productService.findOne(id);
   }
 
+  @Get('in/stock')
+  @HttpCode(HttpStatus.OK)
+  findInStock(@Query() params: GetParams) {
+    return this.productService.findInStock(params);
+  }
+
+  @Get('best/selling')
+  @HttpCode(HttpStatus.OK)
+  findBestSelling(@Query() params: GetParams) {
+    return this.productService.findBestSelling(params);
+  }
+
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
   update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {

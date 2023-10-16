@@ -19,7 +19,11 @@ export class OrderService {
 
   async findAll({ storeId, limit, page }: GetParams) {
 
-    const totalOrders = await this.prismaService.order.count();
+    const totalOrders = await this.prismaService.order.count({
+      where: {
+        storeId: storeId,
+      },
+    });
 
     const orders = await this.prismaService.order.findMany({
       where: {
