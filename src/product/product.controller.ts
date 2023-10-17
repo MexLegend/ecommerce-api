@@ -4,6 +4,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { GetParams } from '../types/getParams';
 import { Public } from 'src/auth/decorators/public.decorator';
+import { GetProductDto } from './dto/get-product.dto';
 
 @Controller('product')
 export class ProductController {
@@ -39,6 +40,13 @@ export class ProductController {
   @HttpCode(HttpStatus.OK)
   findBestSelling(@Query() params: GetParams) {
     return this.productService.findBestSelling(params);
+  }
+
+  @Public()
+  @Get('related/category')
+  @HttpCode(HttpStatus.OK)
+  finByCategory(@Query() params: GetProductDto) {
+    return this.productService.finByCategory(params);
   }
 
   @Patch(':id')

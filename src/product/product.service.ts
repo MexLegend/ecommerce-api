@@ -4,6 +4,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { GetParams } from '../types/getParams';
+import { GetProductDto } from './dto/get-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -72,6 +73,19 @@ export class ProductService {
     return await this.prismaService.product.findMany({
       where: {
         isFeatured: true
+      },
+      include: { images: true, category: true, colors: true, sizes: true },
+      skip: (+page - 1) * +limit,
+      take: +limit
+    });
+  }
+
+  async finByCategory({ categoryId, productId, limit, page }: GetProductDto) {
+
+    return await this.prismaService.product.findMany({
+      where: {
+        categoryId,
+        id: { not: productId }
       },
       include: { images: true, category: true, colors: true, sizes: true },
       skip: (+page - 1) * +limit,

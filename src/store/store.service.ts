@@ -76,7 +76,20 @@ export class StoreService {
       where: {
         slug: slug,
       },
-      include: { billboards: true, categories: true }
+      include: {
+        billboards: {
+          include: { image: true }
+        },
+        categories: true,
+        products: {
+          include: {
+            images: true,
+            category: true,
+            colors: true,
+            sizes: true
+          },
+        }
+      }
     });
   }
 
