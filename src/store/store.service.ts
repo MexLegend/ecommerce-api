@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { GetParams } from 'src/types/getParams';
 
 @Injectable()
 export class StoreService {
@@ -15,7 +16,32 @@ export class StoreService {
     });
   }
 
-  async findAll(userId: string) {
+  async findAll({ limit, page }: GetParams) {
+
+    const totalStores = await this.prismaService.store.count();
+
+    const stores = await this.prismaService.store.findMany({
+      include: {
+        billboards: {
+          include: { image: true }
+        },
+        products: {
+          include: {
+            images: true
+          }
+        }
+      },
+      skip: (+page - 1) * +limit,
+      take: +limit
+    });
+
+    return {
+      data: stores,
+      total: totalStores
+    }
+  }
+
+  async findByUser(userId: string) {
 
     const totalStores = await this.prismaService.store.count(
       {
