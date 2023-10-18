@@ -3,6 +3,7 @@ import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { GetParams } from 'src/types/getParams';
+import { Public } from 'src/auth/decorators/public.decorator';
 
 @Controller('category')
 export class CategoryController {
@@ -21,6 +22,7 @@ export class CategoryController {
     return this.categoryService.findAll(params);
   }
 
+  @Public()
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   findOne(@Param('id') id: string) {
