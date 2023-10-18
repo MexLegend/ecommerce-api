@@ -51,7 +51,19 @@ export class CategoryService {
       where: {
         id: id,
       },
-      include: { billboard: true },
+      include: {
+        billboard: {
+          include: { image: true }
+        },
+        products: {
+          include: {
+            images: true,
+            category: true,
+            colors: true,
+            sizes: true
+          }
+        }
+      },
     });
   }
 
