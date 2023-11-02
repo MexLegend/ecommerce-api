@@ -1,9 +1,14 @@
-import { OrderItem } from "src/types/orderItem";
+export type OrderItem = {
+    productId: string;
+    colorId: string;
+    sizeId: string;
+    quantity: number;
+}
 
 export class CreateOrderDto {
-    address: string;
-    isPaid: boolean;
-    // orderItems: OrderItem[];
-    phone: string;
+    address?: string;
+    orderItems: OrderItem[];
+    phone?: string;
     storeId: string;
+    userId: string;
 }

@@ -1,7 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpCode, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, HttpStatus, HttpCode, Query } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
 import { GetParams } from 'src/types/getParams';
 
 @Controller('order')
@@ -26,10 +25,22 @@ export class OrderController {
     return this.orderService.findOne(id);
   }
 
-  @Patch(':id')
+  @Get('sales-count/:id')
   @HttpCode(HttpStatus.OK)
-  update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-    return this.orderService.update(id, updateOrderDto);
+  findSalesCount(@Param('id') id: string) {
+    return this.orderService.findSalesCount(id);
+  }
+
+  @Get('total/revenue/:id')
+  @HttpCode(HttpStatus.OK)
+  findTotalRevenue(@Param('id') id: string) {
+    return this.orderService.findTotalRevenue(id);
+  }
+
+  @Get('graph/revenue/:id')
+  @HttpCode(HttpStatus.OK)
+  findGraphRevenue(@Param('id') id: string) {
+    return this.orderService.findGraphRevenue(id);
   }
 
   @Delete(':id')

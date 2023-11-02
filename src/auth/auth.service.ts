@@ -20,6 +20,9 @@ export class AuthService {
       where: {
         email,
       },
+      include: {
+        favoriteProducts: true
+      }
     });
 
     if (!user) throw new ForbiddenException('Access Denied');

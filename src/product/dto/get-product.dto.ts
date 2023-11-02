@@ -4,4 +4,7 @@ export class GetProductDto {
     limit?: number;
     categoryId?: string;
     productId?: string;
+    colorIds?: string;
+    sizeIds?: string;
+    storeId?: string;
 }

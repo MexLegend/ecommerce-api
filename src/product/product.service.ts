@@ -55,7 +55,16 @@ export class ProductService {
       where: {
         id: id,
       },
-      include: { images: true, category: true, colors: true, sizes: true },
+      include: {
+        images: {
+          include: {
+            color: true
+          }
+        },
+        category: true,
+        colors: true,
+        sizes: true
+      },
     });
   }
 
@@ -80,12 +89,14 @@ export class ProductService {
     });
   }
 
-  async finByCategory({ categoryId, productId, limit, page }: GetProductDto) {
-
+  async findByFilters({ storeId, categoryId, colorIds, sizeIds, productId, limit, page }: GetProductDto) {
     return await this.prismaService.product.findMany({
       where: {
-        categoryId,
-        id: { not: productId }
+        ...(storeId && { storeId }),
+        ...(categoryId && { categoryId }),
+        ...(productId && { id: { not: productId } }),
+        ...(colorIds && { colorIds: { hasSome: JSON.parse(colorIds) } }),
+        ...(sizeIds && { sizeIds: { hasSome: JSON.parse(sizeIds) } })
       },
       include: { images: true, category: true, colors: true, sizes: true },
       skip: (+page - 1) * +limit,

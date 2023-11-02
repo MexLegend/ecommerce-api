@@ -43,10 +43,10 @@ export class ProductController {
   }
 
   @Public()
-  @Get('related/category')
+  @Get('filtered/list')
   @HttpCode(HttpStatus.OK)
   finByCategory(@Query() params: GetProductDto) {
-    return this.productService.finByCategory(params);
+    return this.productService.findByFilters(params);
   }
 
   @Patch(':id')
