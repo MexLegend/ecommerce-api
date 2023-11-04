@@ -184,7 +184,7 @@ model Color {
   storeId     String    @db.ObjectId
   updatedAt   DateTime  @updatedAt
   color       String
-  Image       Image[]
+  images       Image[]
 
   @@index([storeId])
 }
