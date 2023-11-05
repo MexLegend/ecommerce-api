@@ -3,8 +3,7 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { GetParams } from 'src/types/getParams';
 import { GraphDataDto } from './dto/graph-data.dto';
-import Stripe from 'stripe';
-import { stripe } from 'src/helpers/stripe';
+import Stripe from "stripe";
 
 interface ProductData {
   name: string;
@@ -25,6 +24,11 @@ interface LineItem {
 
 @Injectable()
 export class OrderService {
+
+  stripe = new Stripe(process.env.STRIPE_SECRET_API_KEY, {
+    apiVersion: "2023-10-16",
+    typescript: true
+  });
 
   constructor(
     private readonly prismaService: PrismaService
@@ -80,7 +84,7 @@ export class OrderService {
       }
     });
 
-    const sesion = await stripe.checkout.sessions.create({
+    const sesion = await this.stripe.checkout.sessions.create({
       line_items: lineItems,
       mode: "payment",
       billing_address_collection: "required",
